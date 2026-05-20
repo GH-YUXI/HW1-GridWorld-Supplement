@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GridWorld Value Iteration</title>
+  <link rel="stylesheet" href="./static/style.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="hero">
+      <h1>n x n 網格地圖與 Value Iteration</h1>
+      <p>
+        先設定起點、終點與障礙物，再選擇執行 Value Iteration 最佳策略或隨機策略。
+        頁面會顯示每個狀態的狀態價值 V(s)、策略標記與一條抽樣路徑，也可以逐步播放隨機策略的尋找過程。
+      </p>
+    </header>
+
+    <section class="panel controls">
+      <div class="control-row">
+        <label for="gridSize">選擇網格尺寸 n：</label>
+        <select id="gridSize">
+          <option value="5">5 x 5</option>
+          <option value="6">6 x 6</option>
+          <option value="7">7 x 7</option>
+          <option value="8">8 x 8</option>
+          <option value="9">9 x 9</option>
+        </select>
+        <button id="buildGridBtn">建立網格</button>
+        <button id="resetGridBtn" class="secondary">清空設定</button>
+      </div>
+
+      <div class="control-row">
+        <label for="rewardInput">步驟獎勵 Reward：</label>
+        <input id="rewardInput" type="number" step="0.1" value="-1" />
+
+        <label for="gammaInput">折扣因子 γ：</label>
+        <input id="gammaInput" type="number" step="0.01" min="0" max="0.999" value="0.9" />
+      </div>
+
+      <div class="control-row mode-row">
+        <span>編輯模式：</span>
+        <button class="mode-btn active" data-mode="start">起點</button>
+        <button class="mode-btn" data-mode="end">終點</button>
+        <button class="mode-btn" data-mode="obstacle">障礙物</button>
+        <button class="mode-btn" data-mode="empty">清除格子</button>
+      </div>
+    </section>
+
+    <section class="panel info-grid">
+      <div>目前 n：<strong id="infoN">5</strong></div>
+      <div>起點數：<strong id="infoStart">0/1</strong></div>
+      <div>終點數：<strong id="infoEnd">0/1</strong></div>
+      <div>障礙物：<strong id="infoObstacle">0/3</strong></div>
+      <div>Reward：<strong id="infoReward">-1</strong></div>
+      <div>γ：<strong id="infoGamma">0.9</strong></div>
+      <div>目前模式：<strong id="infoMode">起點</strong></div>
+      <div>目前策略：<strong id="infoPolicy">尚未執行</strong></div>
+      <div>收斂門檻：<strong>1e-4</strong></div>
+    </section>
+
+    <section class="panel legend">
+      <div><span class="legend-box start"></span>起點</div>
+      <div><span class="legend-box end"></span>終點</div>
+      <div><span class="legend-box obstacle"></span>障礙物</div>
+      <div><span class="legend-box empty"></span>一般格子</div>
+      <div><span class="legend-box path"></span>最佳策略路徑</div>
+      <div><span class="legend-box random-path"></span>隨機策略抽樣軌跡</div>
+      <div><span class="legend-current"></span>目前播放位置</div>
+      <div><span class="legend-policy">↑</span> Value Iteration 策略箭頭</div>
+      <div><span class="legend-policy">🎲</span> 隨機策略</div>
+    </section>
+
+    <section class="panel action-panel">
+      <button id="runBtn" class="primary">執行 Value Iteration</button>
+      <button id="randomPolicyBtn" class="primary alt-primary">執行隨機策略</button>
+      <button id="randomStepBtn" class="primary alt-primary">逐步播放隨機策略</button>
+      <button id="stopAnimationBtn" class="secondary" disabled>停止播放</button>
+      <button id="demoBtn" class="secondary">載入示範地圖</button>
+    </section>
+
+    <section class="panel">
+      <div id="grid" class="grid" aria-label="grid world"></div>
+    </section>
+
+    <section id="tracePanel" class="panel trace-panel" hidden>
+      <h2>隨機策略逐步紀錄</h2>
+      <p id="traceStatus" class="trace-status"></p>
+      <ol id="traceList" class="trace-list"></ol>
+    </section>
+
+    <section class="panel">
+      <h2>操作說明</h2>
+      <ol>
+        <li>選擇 n（5 到 9）並建立網格。</li>
+        <li>設定步驟獎勵 Reward 與折扣因子 γ。為確保收斂，γ 必須滿足 0 ≤ γ &lt; 1。</li>
+        <li>切換模式後，點擊格子設定起點、終點、障礙物。</li>
+        <li>障礙物數量最多為 n-2，可少於 n-2。</li>
+        <li>按下「執行 Value Iteration」後，格子會顯示最佳狀態價值 V(s)、最佳策略箭頭與一條抽樣最佳路徑。</li>
+        <li>按下「執行隨機策略」後，系統會以四個方向等機率的隨機策略進行 Policy Evaluation，並顯示一條隨機策略抽樣軌跡。</li>
+        <li>按下「逐步播放隨機策略」後，系統會逐格顯示這次隨機抽樣如何移動，包含目前位置、隨機選到的方向與近期步驟紀錄。</li>
+        <li>若起點無法到達終點，系統會先提示錯誤，不會執行策略計算。</li>
+      </ol>
+      <p id="message" class="message">請先建立網格並完成設定。</p>
+    </section>
+  </main>
+
+  <script src="./static/app.js"></script>
+</body>
+</html>
