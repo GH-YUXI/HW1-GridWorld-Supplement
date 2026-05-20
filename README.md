@@ -9,7 +9,8 @@
 
 原始專案 GitHub Pages: https://gh-yuxi.github.io/HW1-GridWorld-Supplement/
 
-![Homepage Screenshot](homepage.png)
+![Homepage Screenshot](homepage1.png)
+![Homepage Screenshot](homepage2.png)
 
 ## 特色
 
