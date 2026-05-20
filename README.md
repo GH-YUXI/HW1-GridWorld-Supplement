@@ -7,7 +7,7 @@
 
 ## Live Demo
 
-原始專案 GitHub Pages: https://GH-YUXI.github.io/HW1-GridWorld/
+原始專案 GitHub Pages: https://gh-yuxi.github.io/HW1-GridWorld-Supplement/
 
 ![Homepage Screenshot](homepage.png)
 
